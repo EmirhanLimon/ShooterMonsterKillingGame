@@ -5,6 +5,9 @@
 #include "Components/SphereComponent.h"
 #include "MonsterType1.h"
 #include "MonsterType2.h"
+#include "AIMonsterType1.h"
+#include "AIMonsterType2.h"
+#include "AIMonsterType3.h"
 
 AMonsterKillingGameProjectile::AMonsterKillingGameProjectile() 
 {
@@ -36,12 +39,12 @@ AMonsterKillingGameProjectile::AMonsterKillingGameProjectile()
 void AMonsterKillingGameProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 
-	AMonsterType1* Carp1 = Cast<AMonsterType1>(OtherActor);
-	AMonsterType2* Carp2 = Cast<AMonsterType2>(OtherActor);
+	AAIMonsterType1* Carp1 = Cast<AAIMonsterType1>(OtherActor);
+	AAIMonsterType2* Carp2 = Cast<AAIMonsterType2>(OtherActor);
+	AAIMonsterType3* Carp3 = Cast<AAIMonsterType3>(OtherActor);
 	if (Carp1)
 	{
-		Carp1->SetHealth((Carp1->GetHealth()+Carp1->GetDefense())-25.f);
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red,FString::Printf( TEXT("%f"),Carp1->GetHealth()));
+		Carp1->SetHealth((Carp1->GetHealth()+Carp1->GetDefense())-25.f);		
 		if (Carp1->GetHealth() <= 0) {
 			Carp1->Destroy();
 		}
@@ -49,11 +52,17 @@ void AMonsterKillingGameProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* 
 	if (Carp2)
 	{
 		Carp2->SetHealth((Carp2->GetHealth() + Carp2->GetDefense()) - 25.f);
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString::Printf(TEXT("%f"), Carp2->GetHealth()));
 		if (Carp2->GetHealth() <= 0) {
 			Carp2->Destroy();
 		}
-
+	}
+	if (Carp3)
+	{
+		Carp3->SetHealth(Carp3->GetHealth() + Carp3->GetDefense() - 25.f);
+		if (Carp3->GetHealth() <= 0)
+		{
+			Carp3->Destroy();
+		}
 	}
 	Destroy();
 

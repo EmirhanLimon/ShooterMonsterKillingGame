@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
-
+#include "Components/PawnNoiseEmitterComponent.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "MonsterKillingGameCharacter.generated.h"
@@ -169,10 +169,16 @@ public:
 		float ReloadAmmo;
 	UPROPERTY()
 		bool ReloadOnline = false;
+	private:
+		UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,meta=(AllowPrivateAccess="true"))
+			float Health = 200.f;
+		public:
+			FORCEINLINE void SetHealth(float NewHealth) { Health = NewHealth; }
+			FORCEINLINE float GetHealth() { return Health; }
 	/** Returns Mesh1P subobject **/
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
-
+	
 };
 
