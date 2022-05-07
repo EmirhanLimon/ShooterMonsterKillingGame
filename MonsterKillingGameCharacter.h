@@ -56,7 +56,6 @@ public:
 
 protected:
 	virtual void BeginPlay();
-	virtual void Tick(float DeltaSeconds) override;
 
 public:
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
@@ -86,10 +85,9 @@ public:
 	/** Whether to use motion controller location for aiming. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	uint8 bUsingMotionControllers : 1;
-	UPROPERTY()
-		FTimerHandle RPM;
 
 protected:
+	
 	UFUNCTION()
 	void Dash();
 	UFUNCTION()
@@ -100,6 +98,8 @@ protected:
 	void OnStartReload();
 	UFUNCTION()
 	void Reload();
+	UFUNCTION()
+	void ReloadFun1();
 	/** Fires a projectile. */
 	void OnFire();
 	
@@ -156,29 +156,51 @@ protected:
 
 public:
 	UPROPERTY()
-		float DashDistance = 10000.f;
+	float DashDistance = 10000.f;
 	UPROPERTY()
-		float sprit = 100.f;
+	FTimerHandle Timer;
 	UPROPERTY()
-		FTimerHandle Timer;
+	FTimerHandle RPM;
 	UPROPERTY()
-		float MagazineAmmo = 60;
+	float MagazineAmmo = 60;
 	UPROPERTY()
-		float ReserveAmmo = 210;
+	float ReserveAmmo = 210;
 	UPROPERTY()
-		float ReloadAmmo;
+	float ReloadAmmo;
 	UPROPERTY()
-		bool ReloadOnline = false;
-	private:
-		UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,meta=(AllowPrivateAccess="true"))
-			float Health = 200.f;
-		public:
-			FORCEINLINE void SetHealth(float NewHealth) { Health = NewHealth; }
-			FORCEINLINE float GetHealth() { return Health; }
+	bool ReloadOnline = false;
+private:
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,meta=(AllowPrivateAccess="true"))
+	int HPStat = 5;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,meta=(AllowPrivateAccess="true"))
+	int STRStat = 5;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,meta=(AllowPrivateAccess="true"))
+	int SPStat = 5;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,meta=(AllowPrivateAccess="true"))
+	float Attack = 25.f;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,meta=(AllowPrivateAccess="true"))
+	float MaxHealth = 200.f;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,meta=(AllowPrivateAccess="true"))
+	float Health = MaxHealth;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,meta=(AllowPrivateAccess="true"))
+	float Maxsprit = 100.f;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,meta=(AllowPrivateAccess="true"))
+	float sprit = Maxsprit;
+	
+public:
+	FORCEINLINE void SetHealth(float NewHealth) { Health = NewHealth; }
+	FORCEINLINE float GetHealth() { return Health; }
+
+	FORCEINLINE void SetSprit(float NewSprit) { sprit = NewSprit; }
+	FORCEINLINE float GetSprit() { return sprit; }
+
+	FORCEINLINE void SetAttack(float NewAttack) { Attack = NewAttack; }
+	FORCEINLINE float GetAttack() { return Attack; }
+	
 	/** Returns Mesh1P subobject **/
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
-	
+
 };
 

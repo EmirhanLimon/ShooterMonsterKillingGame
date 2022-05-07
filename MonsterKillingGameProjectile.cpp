@@ -3,11 +3,12 @@
 #include "MonsterKillingGameProjectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
-#include "MonsterType1.h"
-#include "MonsterType2.h"
-#include "AIMonsterType1.h"
-#include "AIMonsterType2.h"
-#include "AIMonsterType3.h"
+#include "AIMonster1.h"
+#include "AIMonster2.h"
+#include "AIMonster3.h"
+#include "MonsterKillingGameCharacter.h"
+#include "GameFramework/GameSession.h"
+#include "Kismet/GameplayStatics.h"
 
 AMonsterKillingGameProjectile::AMonsterKillingGameProjectile() 
 {
@@ -36,37 +37,39 @@ AMonsterKillingGameProjectile::AMonsterKillingGameProjectile()
 	InitialLifeSpan = 3.0f;
 }
 
+
+
+
 void AMonsterKillingGameProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-
-	AAIMonsterType1* Carp1 = Cast<AAIMonsterType1>(OtherActor);
-	AAIMonsterType2* Carp2 = Cast<AAIMonsterType2>(OtherActor);
-	AAIMonsterType3* Carp3 = Cast<AAIMonsterType3>(OtherActor);
+	MainCharacter = Cast<AMonsterKillingGameCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	AAIMonster1* Carp1 = Cast<AAIMonster1>(OtherActor);
+	AAIMonster2* Carp2 = Cast<AAIMonster2>(OtherActor);
+	AAIMonster3* Carp3 = Cast<AAIMonster3>(OtherActor);
+	
 	if (Carp1)
 	{
-		Carp1->SetHealth((Carp1->GetHealth()+Carp1->GetDefense())-25.f);		
+		Carp1->SetHealth((Carp1->GetHealth()+Carp1->GetDefense()) - MainCharacter->GetAttack());		
 		if (Carp1->GetHealth() <= 0) {
 			Carp1->Destroy();
 		}
 	}
 	if (Carp2)
 	{
-		Carp2->SetHealth((Carp2->GetHealth() + Carp2->GetDefense()) - 25.f);
+		Carp2->SetHealth(Carp2->GetHealth() + Carp2->GetDefense() - MainCharacter->GetAttack());
 		if (Carp2->GetHealth() <= 0) {
 			Carp2->Destroy();
 		}
 	}
 	if (Carp3)
 	{
-		Carp3->SetHealth(Carp3->GetHealth() + Carp3->GetDefense() - 25.f);
+		Carp3->SetHealth(Carp3->GetHealth() + Carp3->GetDefense() - MainCharacter->GetAttack());
 		if (Carp3->GetHealth() <= 0)
 		{
 			Carp3->Destroy();
 		}
 	}
 	Destroy();
+}
 
 
-	
-	
-} 

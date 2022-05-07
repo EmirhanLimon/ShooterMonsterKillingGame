@@ -11,8 +11,7 @@
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "MotionControllerComponent.h"
-#include "Components/PawnNoiseEmitterComponent.h"
-#include <Runtime/HeadMountedDisplay/Public/XRMotionControllerBase.h>
+#include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -27,7 +26,7 @@ AMonsterKillingGameCharacter::AMonsterKillingGameCharacter()
 	// set our turn rates for input
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
-	
+
 	// Create a CameraComponent	
 	FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
 	FirstPersonCameraComponent->SetupAttachment(GetCapsuleComponent());
@@ -85,17 +84,12 @@ AMonsterKillingGameCharacter::AMonsterKillingGameCharacter()
 	// Uncomment the following line to turn motion controllers on by default:
 	//bUsingMotionControllers = true;
 }
-void AMonsterKillingGameCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-	
 
-}
 void AMonsterKillingGameCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
-	
+
 	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
 	FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
 
@@ -110,7 +104,6 @@ void AMonsterKillingGameCharacter::BeginPlay()
 		VR_Gun->SetHiddenInGame(true, true);
 		Mesh1P->SetHiddenInGame(false, true);
 	}
-	GetWorldTimerManager().SetTimer(Timer, this, &AMonsterKillingGameCharacter::TriggerFun, 1.0f);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -125,10 +118,10 @@ void AMonsterKillingGameCharacter::SetupPlayerInputComponent(class UInputCompone
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
-	//Dash
 	PlayerInputComponent->BindAction("Dash", IE_Pressed, this, &AMonsterKillingGameCharacter::Dash);
-	//Reload
+
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AMonsterKillingGameCharacter::OnStartReload);
+
 	// Bind fire event
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMonsterKillingGameCharacter::StartFire);
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &AMonsterKillingGameCharacter::StopFire);
@@ -156,52 +149,52 @@ void AMonsterKillingGameCharacter::OnFire()
 	if (MagazineAmmo > 0 && ReloadOnline==false) {
 
 	
-	MagazineAmmo = MagazineAmmo - 1;
-	// try and fire a projectile
+		MagazineAmmo = MagazineAmmo - 1;
+		// try and fire a projectile
 	
-	if (ProjectileClass != nullptr)
-	{
-		UWorld* const World = GetWorld();
-		if (World != nullptr)
+		if (ProjectileClass != nullptr)
 		{
-			if (bUsingMotionControllers)
+			UWorld* const World = GetWorld();
+			if (World != nullptr)
 			{
-				const FRotator SpawnRotation = VR_MuzzleLocation->GetComponentRotation();
-				const FVector SpawnLocation = VR_MuzzleLocation->GetComponentLocation();
-				World->SpawnActor<AMonsterKillingGameProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
-			}
-			else
-			{
-				const FRotator SpawnRotation = GetControlRotation();
-				// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-				const FVector SpawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
+				if (bUsingMotionControllers)
+				{
+					const FRotator SpawnRotation = VR_MuzzleLocation->GetComponentRotation();
+					const FVector SpawnLocation = VR_MuzzleLocation->GetComponentLocation();
+					World->SpawnActor<AMonsterKillingGameProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
+				}
+				else
+				{
+					const FRotator SpawnRotation = GetControlRotation();
+					// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+					const FVector SpawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
 
-				//Set Spawn Collision Handling Override
-				FActorSpawnParameters ActorSpawnParams;
-				ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+					//Set Spawn Collision Handling Override
+					FActorSpawnParameters ActorSpawnParams;
+					ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
-				// spawn the projectile at the muzzle
-				World->SpawnActor<AMonsterKillingGameProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+					// spawn the projectile at the muzzle
+					World->SpawnActor<AMonsterKillingGameProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+				}
 			}
 		}
-	}
 
-	// try and play the sound if specified
-	if (FireSound != nullptr)
-	{
-		UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
-	}
-
-	// try and play a firing animation if specified
-	if (FireAnimation != nullptr)
-	{
-		// Get the animation object for the arms mesh
-		UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
-		if (AnimInstance != nullptr)
+		// try and play the sound if specified
+		if (FireSound != nullptr)
 		{
-			AnimInstance->Montage_Play(FireAnimation, 1.f);
+			UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
 		}
-	}
+
+		// try and play a firing animation if specified
+		if (FireAnimation != nullptr)
+		{
+			// Get the animation object for the arms mesh
+			UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
+			if (AnimInstance != nullptr)
+			{
+				AnimInstance->Montage_Play(FireAnimation, 1.f);
+			}
+		}
 	}
 	else
 	{
@@ -225,9 +218,10 @@ void AMonsterKillingGameCharacter::SpritFilling()
 	
 	if (sprit < 100)
 	{
+		float SpritRestoreTime = 1-(SPStat/100);
 		sprit++;
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, FString::Printf(TEXT(" %f"), sprit));
-		GetWorldTimerManager().SetTimer(Timer, this, &AMonsterKillingGameCharacter::TriggerFun, 1.0f);
+		GetWorldTimerManager().SetTimer(Timer, this, &AMonsterKillingGameCharacter::TriggerFun, SpritRestoreTime);
 	}
 	
 	
@@ -248,9 +242,7 @@ void AMonsterKillingGameCharacter::Reload()
 	{
 		if (ReserveAmmo > 59)
 		{
-			ReloadAmmo = 60 - MagazineAmmo;
-			MagazineAmmo = MagazineAmmo + ReloadAmmo;
-			ReserveAmmo = ReserveAmmo - ReloadAmmo;
+			ReloadFun1();
 		}
 		else if (ReserveAmmo > 0 && ReserveAmmo < 60)
 		{
@@ -262,15 +254,20 @@ void AMonsterKillingGameCharacter::Reload()
 			}
 			else
 			{
-				ReloadAmmo = 60 - MagazineAmmo;
-				MagazineAmmo = MagazineAmmo + ReloadAmmo;
-				ReserveAmmo = ReserveAmmo - ReloadAmmo;
+				ReloadFun1();
 			}
 		}
 
 	}
 	
 }
+void AMonsterKillingGameCharacter::ReloadFun1()
+{
+	ReloadAmmo = 60 - MagazineAmmo;
+	MagazineAmmo = MagazineAmmo + ReloadAmmo;
+	ReserveAmmo = ReserveAmmo - ReloadAmmo;
+}
+
 void AMonsterKillingGameCharacter::StartFire()
 {
 	if (MagazineAmmo > 0 && ReloadOnline==false)
@@ -319,7 +316,43 @@ void AMonsterKillingGameCharacter::EndTouch(const ETouchIndex::Type FingerIndex,
 	TouchItem.bIsPressed = false;
 }
 
+//Commenting this section out to be consistent with FPS BP template.
+//This allows the user to turn without using the right virtual joystick
 
+//void AMonsterKillingGameCharacter::TouchUpdate(const ETouchIndex::Type FingerIndex, const FVector Location)
+//{
+//	if ((TouchItem.bIsPressed == true) && (TouchItem.FingerIndex == FingerIndex))
+//	{
+//		if (TouchItem.bIsPressed)
+//		{
+//			if (GetWorld() != nullptr)
+//			{
+//				UGameViewportClient* ViewportClient = GetWorld()->GetGameViewport();
+//				if (ViewportClient != nullptr)
+//				{
+//					FVector MoveDelta = Location - TouchItem.Location;
+//					FVector2D ScreenSize;
+//					ViewportClient->GetViewportSize(ScreenSize);
+//					FVector2D ScaledDelta = FVector2D(MoveDelta.X, MoveDelta.Y) / ScreenSize;
+//					if (FMath::Abs(ScaledDelta.X) >= 4.0 / ScreenSize.X)
+//					{
+//						TouchItem.bMoved = true;
+//						float Value = ScaledDelta.X * BaseTurnRate;
+//						AddControllerYawInput(Value);
+//					}
+//					if (FMath::Abs(ScaledDelta.Y) >= 4.0 / ScreenSize.Y)
+//					{
+//						TouchItem.bMoved = true;
+//						float Value = ScaledDelta.Y * BaseTurnRate;
+//						AddControllerPitchInput(Value);
+//					}
+//					TouchItem.Location = Location;
+//				}
+//				TouchItem.Location = Location;
+//			}
+//		}
+//	}
+//}
 
 void AMonsterKillingGameCharacter::MoveForward(float Value)
 {
