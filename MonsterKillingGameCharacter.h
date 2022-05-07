@@ -167,17 +167,23 @@ public:
 	float ReserveAmmo = 210;
 	UPROPERTY()
 	float ReloadAmmo;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite)
+	float SpritRestoreTime=1;
 	UPROPERTY()
 	bool ReloadOnline = false;
 private:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,meta=(AllowPrivateAccess="true"))
 	int HPStat = 5;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,meta=(AllowPrivateAccess="true"))
+	int DEFStat = 5;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,meta=(AllowPrivateAccess="true"))
 	int STRStat = 5;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,meta=(AllowPrivateAccess="true"))
 	int SPStat = 5;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,meta=(AllowPrivateAccess="true"))
 	float Attack = 25.f;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,meta=(AllowPrivateAccess="true"))
+	float Defense = 2.5f;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,meta=(AllowPrivateAccess="true"))
 	float MaxHealth = 200.f;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,meta=(AllowPrivateAccess="true"))
@@ -196,6 +202,9 @@ public:
 
 	FORCEINLINE void SetAttack(float NewAttack) { Attack = NewAttack; }
 	FORCEINLINE float GetAttack() { return Attack; }
+
+	FORCEINLINE void SetDefense(float NewDefense) {Defense = NewDefense; }
+	FORCEINLINE float GetDefense() { return Defense; }
 	
 	/** Returns Mesh1P subobject **/
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }

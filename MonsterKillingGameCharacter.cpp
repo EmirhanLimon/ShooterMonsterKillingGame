@@ -218,7 +218,7 @@ void AMonsterKillingGameCharacter::SpritFilling()
 	
 	if (sprit < 100)
 	{
-		float SpritRestoreTime = 1-(SPStat/100);
+		
 		sprit++;
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Blue, FString::Printf(TEXT(" %f"), sprit));
 		GetWorldTimerManager().SetTimer(Timer, this, &AMonsterKillingGameCharacter::TriggerFun, SpritRestoreTime);

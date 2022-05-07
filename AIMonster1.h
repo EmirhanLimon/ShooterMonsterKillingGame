@@ -50,7 +50,7 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	float Defense = 10;
 	UPROPERTY(EditDefaultsOnly)
-	float AttackPower = 10;
+	float AttackPower = 15;
 public:
 	FORCEINLINE void SetHealth(float NewHealth) { Health = NewHealth; }
 	FORCEINLINE float GetHealth() { return Health; }

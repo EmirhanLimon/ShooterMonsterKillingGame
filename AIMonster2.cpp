@@ -95,7 +95,7 @@ void AAIMonster2::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 
 	AMonsterKillingGameCharacter* Carp1 = Cast<AMonsterKillingGameCharacter>(OtherActor);
 	if (Carp1) {
-		Carp1->SetHealth(Carp1->GetHealth() - AttackPower);
+		Carp1->SetHealth(Carp1->GetHealth() - (AttackPower -  + Carp1->GetDefense()));
 		Destroy();
 		if(Carp1->GetHealth() <= 0)
 		{
