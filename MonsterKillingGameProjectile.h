@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AIMonster1.h"
 #include "MonsterKillingGameCharacter.h"
 #include "GameFramework/Actor.h"
 #include "MonsterKillingGameProjectile.generated.h"
@@ -35,6 +36,8 @@ public:
 	/** Returns ProjectileMovement subobject **/
 	UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
     AMonsterKillingGameCharacter*MainCharacter;
+   
+    
 	
 };
 

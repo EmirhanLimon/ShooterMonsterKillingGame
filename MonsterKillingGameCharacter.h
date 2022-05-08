@@ -161,9 +161,9 @@ public:
 	FTimerHandle Timer;
 	UPROPERTY()
 	FTimerHandle RPM;
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	float MagazineAmmo = 60;
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	float ReserveAmmo = 210;
 	UPROPERTY()
 	float ReloadAmmo;

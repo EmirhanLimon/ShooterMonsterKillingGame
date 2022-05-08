@@ -9,7 +9,7 @@
 #include "MonsterKillingGameCharacter.h"
 #include "GameFramework/GameSession.h"
 #include "Kismet/GameplayStatics.h"
-
+#include "Ammo.h"
 AMonsterKillingGameProjectile::AMonsterKillingGameProjectile() 
 {
 	// Use a sphere as a simple collision representation
@@ -43,31 +43,38 @@ AMonsterKillingGameProjectile::AMonsterKillingGameProjectile()
 void AMonsterKillingGameProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	MainCharacter = Cast<AMonsterKillingGameCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	
 	AAIMonster1* Carp1 = Cast<AAIMonster1>(OtherActor);
 	AAIMonster2* Carp2 = Cast<AAIMonster2>(OtherActor);
 	AAIMonster3* Carp3 = Cast<AAIMonster3>(OtherActor);
 	
+	
 	if (Carp1)
 	{
 		Carp1->SetHealth((Carp1->GetHealth()+Carp1->GetDefense()) - MainCharacter->GetAttack());		
-		if (Carp1->GetHealth() <= 0) {
+		if(Carp1->GetHealth() <= 0)
+		{
 			Carp1->Destroy();
 		}
+		
 	}
 	if (Carp2)
 	{
 		Carp2->SetHealth(Carp2->GetHealth() + Carp2->GetDefense() - MainCharacter->GetAttack());
-		if (Carp2->GetHealth() <= 0) {
-			Carp2->Destroy();
-		}
+		Carp2->SetHealth((Carp2->GetHealth()+Carp2->GetDefense()) - MainCharacter->GetAttack());		
+        		if(Carp2->GetHealth() <= 0)
+        		{
+        			Carp2->Destroy();
+        		}
 	}
 	if (Carp3)
 	{
 		Carp3->SetHealth(Carp3->GetHealth() + Carp3->GetDefense() - MainCharacter->GetAttack());
-		if (Carp3->GetHealth() <= 0)
-		{
-			Carp3->Destroy();
-		}
+		Carp3->SetHealth((Carp3->GetHealth()+Carp3->GetDefense()) - MainCharacter->GetAttack());		
+        		if(Carp3->GetHealth() <= 0)
+        		{
+        			Carp3->Destroy();
+        		}
 	}
 	Destroy();
 }

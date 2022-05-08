@@ -41,7 +41,6 @@ public:
 	AAIController* AIC_Ref;
 	UPROPERTY()
 	FTimerHandle Timer;
-	
 	UPROPERTY(EditDefaultsOnly)
 	class UCapsuleComponent* AICharacterCompCapsule;
 private:
