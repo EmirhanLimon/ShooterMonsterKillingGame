@@ -5,3 +5,4 @@
 ![Stats2](https://user-images.githubusercontent.com/59826343/167259158-4035298b-b422-458e-9db6-d162c5d9daa1.PNG)
 ![HPStat](https://user-images.githubusercontent.com/59826343/167259159-ba9d253d-ee54-432e-ad26-1ba11a71ccf9.PNG)
 ![STRStat](https://user-images.githubusercontent.com/59826343/167259160-44ac27f2-f946-4c0b-951c-a68c44f239af.PNG)
+![AmmoSpawn](https://user-images.githubusercontent.com/59826343/167308279-22745575-894a-4549-822b-8dd9e80fdee9.PNG)
