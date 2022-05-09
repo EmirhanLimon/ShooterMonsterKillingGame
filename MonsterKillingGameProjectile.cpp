@@ -10,6 +10,8 @@
 #include "GameFramework/GameSession.h"
 #include "Kismet/GameplayStatics.h"
 #include "Ammo.h"
+//#include "../../../../../../Program Files/Epic Games/UE_4.27/Engine/Shaders/Private/SolidColorPixelShader.ush"
+
 AMonsterKillingGameProjectile::AMonsterKillingGameProjectile() 
 {
 	// Use a sphere as a simple collision representation
@@ -55,6 +57,7 @@ void AMonsterKillingGameProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* 
 		if(Carp1->GetHealth() <= 0)
 		{
 			Carp1->Destroy();
+			MainCharacter->SetExperience(MainCharacter->GetExperience() + 100);
 		}
 		
 	}
@@ -65,6 +68,7 @@ void AMonsterKillingGameProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* 
         		if(Carp2->GetHealth() <= 0)
         		{
         			Carp2->Destroy();
+        			MainCharacter->SetExperience(MainCharacter->GetExperience() + 100);
         		}
 	}
 	if (Carp3)
@@ -74,6 +78,7 @@ void AMonsterKillingGameProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* 
         		if(Carp3->GetHealth() <= 0)
         		{
         			Carp3->Destroy();
+        			MainCharacter->SetExperience(MainCharacter->GetExperience() + 100);
         		}
 	}
 	Destroy();

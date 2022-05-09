@@ -201,6 +201,17 @@ void AMonsterKillingGameCharacter::OnFire()
 		OnStartReload();
 	}
 }
+void AMonsterKillingGameCharacter::StatusPointFun()
+{
+	if(Experience >= RequiredExperience)
+	{
+		CharacterLevel++;
+		StatusPoint += 20;
+		RequiredExperience += 100;
+		Experience = 0;
+	}
+}
+
 void AMonsterKillingGameCharacter::Dash()
 {
 	if (sprit > 25)

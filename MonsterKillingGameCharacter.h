@@ -87,7 +87,8 @@ public:
 	uint8 bUsingMotionControllers : 1;
 
 protected:
-	
+	UFUNCTION()
+	void StatusPointFun();
 	UFUNCTION()
 	void Dash();
 	UFUNCTION()
@@ -173,6 +174,14 @@ public:
 	bool ReloadOnline = false;
 private:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,meta=(AllowPrivateAccess="true"))
+	int StatusPoint=0;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,meta=(AllowPrivateAccess="true"))
+	int CharacterLevel=1;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,meta=(AllowPrivateAccess="true"))
+	float RequiredExperience=1000;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,meta=(AllowPrivateAccess="true"))
+	float Experience=0;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,meta=(AllowPrivateAccess="true"))
 	int HPStat = 5;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,meta=(AllowPrivateAccess="true"))
 	int DEFStat = 5;
@@ -203,8 +212,11 @@ public:
 	FORCEINLINE void SetAttack(float NewAttack) { Attack = NewAttack; }
 	FORCEINLINE float GetAttack() { return Attack; }
 
-	FORCEINLINE void SetDefense(float NewDefense) {Defense = NewDefense; }
+	FORCEINLINE void SetDefense(float NewDefense) { Defense = NewDefense; }
 	FORCEINLINE float GetDefense() { return Defense; }
+
+	FORCEINLINE void SetExperience(float NewExperience) { Experience = NewExperience; }
+	FORCEINLINE float GetExperience() { return Experience; }
 	
 	/** Returns Mesh1P subobject **/
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
