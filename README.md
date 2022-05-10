@@ -6,3 +6,4 @@
 ![HPStat](https://user-images.githubusercontent.com/59826343/167259159-ba9d253d-ee54-432e-ad26-1ba11a71ccf9.PNG)
 ![STRStat](https://user-images.githubusercontent.com/59826343/167259160-44ac27f2-f946-4c0b-951c-a68c44f239af.PNG)
 ![AmmoSpawn](https://user-images.githubusercontent.com/59826343/167308279-22745575-894a-4549-822b-8dd9e80fdee9.PNG)
+![MiniMap](https://user-images.githubusercontent.com/59826343/167658739-09e9bb23-5b25-4812-ac57-f72ef70855f9.PNG)
